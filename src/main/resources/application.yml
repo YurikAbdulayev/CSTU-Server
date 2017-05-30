@@ -5,9 +5,9 @@ spring:
 # Database
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/cstu_scheduler?createDatabaseIfNotExist=true
-    username: postgres
-    password: postgres
+    url: ${db_url}
+    username: ${username}
+    password: ${password}
 # JPA properties
   jpa:
     hibernate:
