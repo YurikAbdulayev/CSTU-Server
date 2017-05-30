@@ -2,12 +2,13 @@ package com.cstu.web;
 
 import com.cstu.domain.CstuUser;
 import com.cstu.domain.UserRepository;
+import com.cstu.utils.UserUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
@@ -20,20 +21,43 @@ public class UserRestController {
         this.repository = repository;
     }
 
-
-    @RequestMapping(value = "/hello",method = RequestMethod.GET)
-    public ResponseEntity<String> sayHello() {
-        System.out.println("hello");
-        return ResponseEntity.ok().body("Hello");
+    @PostMapping(value = "/create/user")
+    public ResponseEntity<String> createNewUser(@RequestBody CstuUser user) {
+        CstuUser currentUser = repository.save(user);
+        UserUtils.sendMail(currentUser);
+        return ResponseEntity.ok().body(HttpStatus.OK.toString());
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> addUser() {
-        System.out.println("post");
-        CstuUser cstuUser = new CstuUser();
-        cstuUser.setName("Yurik");
-        CstuUser user = repository.save(cstuUser);
-        return ResponseEntity.ok().body(user);
+    @PostMapping(value = "/logout/{id}")
+    public ResponseEntity<String> logout(@PathVariable("id") Long id) {
+        CstuUser currentUser = repository.findOne(id);
+        currentUser.setToken(null);
+        repository.save(currentUser);
+        return ResponseEntity.ok().body(HttpStatus.OK.toString());
+    }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> login(@RequestBody CstuUser user) {
+        try {
+            CstuUser currentUser = repository.findByLogin(user.getLogin());
+            if (Objects.equals(currentUser.getPassword(), user.getPassword())) {
+                currentUser.setToken(UserUtils.generateToken());
+                repository.save(currentUser);
+                return ResponseEntity.ok().body(currentUser);
+            }else {
+                return ResponseEntity.badRequest().body(HttpStatus.UNAUTHORIZED.toString());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(HttpStatus.BAD_REQUEST.toString());
+        }
+    }
+
+    @PostMapping(value = "/verify/{id}")
+    public ResponseEntity<String> verify(@PathVariable("id") Long id) {
+        CstuUser currentUser = repository.findOne(id);
+        currentUser.setActive(true);
+        repository.save(currentUser);
+        return ResponseEntity.ok().body(HttpStatus.OK.toString());
     }
 
 }
