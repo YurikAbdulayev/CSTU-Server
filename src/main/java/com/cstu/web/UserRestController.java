@@ -41,6 +41,9 @@ public class UserRestController {
         try {
             CstuUser currentUser = repository.findByLogin(user.getLogin());
             if (Objects.equals(currentUser.getPassword(), user.getPassword())) {
+                if (!currentUser.getActive()) {
+                    return ResponseEntity.ok().body("NOT_ACTIVE");
+                }
                 currentUser.setToken(UserUtils.generateToken());
                 repository.save(currentUser);
                 return ResponseEntity.ok().body(currentUser);
@@ -60,7 +63,7 @@ public class UserRestController {
             repository.save(currentUser);
             return ResponseEntity.ok().body("Користувача " + currentUser.getEmail() + " щойно активовано.");
         } else {
-            return ResponseEntity.ok().body("Користувач" + currentUser.getEmail() + " вже активний");
+            return ResponseEntity.ok().body("Користувач " + currentUser.getEmail() + " вже активний");
         }
 
     }
