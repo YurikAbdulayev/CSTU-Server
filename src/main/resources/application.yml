@@ -26,7 +26,7 @@ logging:
     org.hibernate: DEBUG
 # Server configuration
 server:
-  port: 8080
+  port: ${PORT}
   sessionTimeout: 30
 # Security configuration
 security:
