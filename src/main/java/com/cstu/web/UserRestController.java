@@ -52,12 +52,17 @@ public class UserRestController {
         }
     }
 
-    @PostMapping(value = "/verify/{id}")
+    @GetMapping(value = "/verify/{id}")
     public ResponseEntity<String> verify(@PathVariable("id") Long id) {
         CstuUser currentUser = repository.findOne(id);
-        currentUser.setActive(true);
-        repository.save(currentUser);
-        return ResponseEntity.ok().body(HttpStatus.OK.toString());
+        if (!currentUser.getActive()) {
+            currentUser.setActive(true);
+            repository.save(currentUser);
+            return ResponseEntity.ok().body("Користувача " + currentUser.getEmail() + " щойно активовано.");
+        } else {
+            return ResponseEntity.ok().body("Користувач" + currentUser.getEmail() + " вже активний");
+        }
+
     }
 
 }
