@@ -40,7 +40,7 @@ public class MessageRestController {
                                          @PathVariable("login") String login) {
         CstuUser currentUser = userRepository.findByLogin(login);
         if (currentUser != null) {
-            List<Message> messageList = repository.getMessages(identifier);
+            List<Message> messageList = repository.findByIdentifier(identifier);
             return ResponseEntity.ok().body(messageList);
         } else {
             return ResponseEntity.badRequest().body(new ArrayList<>());
