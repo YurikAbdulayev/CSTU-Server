@@ -16,13 +16,11 @@ import java.util.List;
 @RequestMapping("/api")
 public class MessageRestController {
 
+    @Inject
     private MessageRepository repository;
-    private UserRepository userRepository;
 
     @Inject
-    public void setRepository(MessageRepository repository) {
-        this.repository = repository;
-    }
+    private UserRepository userRepository;
 
     @GetMapping
     public ResponseEntity<String> testMessage() {
