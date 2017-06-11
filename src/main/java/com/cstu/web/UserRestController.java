@@ -23,6 +23,9 @@ public class UserRestController {
 
     @PostMapping(value = "/create/user")
     public ResponseEntity<String> createNewUser(@RequestBody CstuUser user) {
+        if (Objects.equals(user.getLogin(), repository.findByLogin(user.getLogin()).getLogin())) {
+            return ResponseEntity.ok().body("Користувач з таким логіном вже існує");
+        }
         CstuUser currentUser = repository.save(user);
         UserUtils.sendMail(currentUser);
         return ResponseEntity.ok().body(HttpStatus.OK.toString());
