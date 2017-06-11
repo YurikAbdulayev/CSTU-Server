@@ -37,14 +37,17 @@ public class MessageRestController {
 
     @GetMapping(value = "message/{identifier}/{login}")
     public ResponseEntity<List<Message>> verify(@PathVariable("identifier") String identifier,
-                                         @PathVariable("login") String login) {
-        CstuUser currentUser = userRepository.findByLogin(login);
-        if (currentUser != null) {
-            List<Message> messageList = repository.findByIdentifier(identifier);
-            return ResponseEntity.ok().body(messageList);
-        } else {
+                                                @PathVariable("login") String login) {
+        try {
+            CstuUser currentUser = userRepository.findByLogin(login);
+            if (currentUser != null) {
+                List<Message> messageList = repository.findByIdentifier(identifier);
+                return ResponseEntity.ok().body(messageList);
+            } else {
+                return ResponseEntity.badRequest().body(new ArrayList<>());
+            }
+        }catch (NullPointerException e) {
             return ResponseEntity.badRequest().body(new ArrayList<>());
         }
-
     }
 }
