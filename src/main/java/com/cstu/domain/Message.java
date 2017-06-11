@@ -22,6 +22,8 @@ public class Message {
     private String firstName;
     @NotNull
     private String lastName;
+    @NotNull
+    private String time;
 
     public Long getId() {
         return id;
@@ -69,5 +71,13 @@ public class Message {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
