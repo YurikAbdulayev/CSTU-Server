@@ -24,6 +24,8 @@ public class ParserRestController {
     public ResponseEntity<?> getSchedule (@PathVariable String group,
                                                           @PathVariable String sdate,
                                                           @PathVariable String edate) {
-        return ResponseEntity.ok().body(parserService.getSchedule(group, sdate, edate));
+        return ResponseEntity.ok()
+                .body(parserService
+                        .getSchedule(group, sdate, edate));
     }
 }

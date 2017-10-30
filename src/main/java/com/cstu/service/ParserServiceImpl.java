@@ -12,6 +12,8 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,11 +27,13 @@ public class ParserServiceImpl implements ParserService {
     @Override
     public String getSchedule(String group, String sdate, String edate) {
         String url = "http://195.95.232.162:8082/cgi-bin/timetable.cgi";
-        String test = "group=" + C.toWin1251(group)            +//CC%CF%C7-1704
-                "&sdate=" + sdate           +//01.09.2017
-                "&edate=" + edate           +//29.10.2017
-                "&n=700";
+        String test = null;
         try {
+            test = "group=" + C.toWin1251(URLDecoder.decode(group, "UTF-8"))            +//CC%CF%C7-1704
+                    "&sdate=" + sdate           +//01.09.2017
+                    "&edate=" + edate           +//29.10.2017
+                    "&n=700";
+
             List<ScheduleItem> scheduleItems = new ArrayList<>();
             Document doc = Jsoup
                     .connect(url)
@@ -44,7 +48,9 @@ public class ParserServiceImpl implements ParserService {
                 }
             }
             return new Gson().toJson(scheduleItems);
-        } catch (IOException e) {
+        }catch (UnsupportedEncodingException e){
+            return "Unsupported group";
+        }catch (IOException e) {
             e.printStackTrace();
         }
 
