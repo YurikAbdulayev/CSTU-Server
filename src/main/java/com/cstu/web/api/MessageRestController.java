@@ -1,4 +1,4 @@
-package com.cstu.web;
+package com.cstu.web.api;
 
 import com.cstu.domain.CstuUser;
 import com.cstu.domain.Message;
