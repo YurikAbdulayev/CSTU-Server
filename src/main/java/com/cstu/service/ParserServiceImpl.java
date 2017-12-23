@@ -60,7 +60,7 @@ public class ParserServiceImpl implements ParserService {
     private ScheduleItem getScheduleItem(Element day) {
         Element table = day.getElementsByTag("table").first();
         return new ScheduleItem(
-                day.getElementsByTag("h4").first().text(),
+                day.getElementsByTag("h4").first().text().split(" ", 2)[0],
                 day.getElementsByTag("small").first().text(),
                 getScheduleData(table)
         );
@@ -70,11 +70,12 @@ public class ParserServiceImpl implements ParserService {
         List<ScheduleData> scheduleData = new ArrayList<>();
         for (Element tr : table.getElementsByTag("tr")) {
             Elements td = tr.getElementsByTag("td");
-            String item = td.get(1).text();
+            String item = td.get(2).text();
             if (!item.isEmpty()) {
-                scheduleData.add(new ScheduleData(
-                        td.first().text(),
-                        parseLesson(item)
+                scheduleData.add(
+                        new ScheduleData(
+                            td.get(1).text(),
+                            parseLesson(item)
                 ));
             }
         }

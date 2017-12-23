@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value = "/api", produces={"application/json; charset=windows-1251"})
 public class ParserRestController {
 
     private final ParserService parserService;
