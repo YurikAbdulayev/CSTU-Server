@@ -2,5 +2,5 @@
 *.iml
 lib
 target
-Буде вилучено lib/
-Буде вилучено target/
+lib/
+target/
